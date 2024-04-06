@@ -1,0 +1,22 @@
+<div class="list row">
+    <div class="col-md-12">
+      <h4>Users List</h4>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">User Name</th>
+            <th scope="col">User Email</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users; track user.id; let i = $index) {
+          <tr>
+            <td>{{ user.userName }}</td>
+            <td>{{ user.email }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
