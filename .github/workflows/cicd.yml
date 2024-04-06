@@ -1,0 +1,30 @@
+name: Deploy Angular Application
+
+on:
+  push: 
+    branches:
+      - mean-docker-ec2
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+      - name: Login to docker hub
+        run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}       
+      - name: Build docker image
+        run: docker build -t integrationninjas/angular-app .
+      - name: Publish image to docker hub
+        run: docker push integrationninjas/angular-app:latest
+        
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: Pull image from docker hub
+        run: docker pull integrationninjas/angular-app:latest
+      - name: Delete old container
+        run: docker rm -f angular-app-container  
+      - name: Run docker container
+        run: docker run -d -p 4200:80 --name angular-app-container integrationninjas/angular-app
